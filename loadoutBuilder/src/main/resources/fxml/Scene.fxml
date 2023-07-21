@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="548.0" prefWidth="913.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tpd.loadoutBuilder.FXMLController">
+   <top>
+      <Label text="Loadout Builder" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </BorderPane.margin>
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+   </top>
+   <center>
+      <VBox alignment="CENTER" prefHeight="227.0" prefWidth="344.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Scegli i parametri da aumentare (max 2)" textAlignment="CENTER">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cmbP1" prefWidth="150.0" promptText="Obbligatorio" />
+            <ComboBox fx:id="cmbP2" prefWidth="150.0" promptText="Extra" />
+            <Button fx:id="btnCrea" mnemonicParsing="false" onAction="#doCreaBuild" text="Crea Build">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+   <right>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Scelta Manuale">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ListView fx:id="listPicker" minHeight="200.0" minWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </ListView>
+         </children>
+      </VBox>
+   </right>
+   <left>
+      <VBox prefHeight="231.0" prefWidth="237.0" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Parametri da non ridurre:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="checkAtt" mnemonicParsing="false" text="Attacco" />
+            <CheckBox fx:id="checkAttSp" mnemonicParsing="false" text="Attacco Speciale" />
+            <CheckBox fx:id="checkDef" mnemonicParsing="false" text="Difesa" />
+            <CheckBox fx:id="CheckDefSp" mnemonicParsing="false" text="Difesa Speciale" />
+            <CheckBox fx:id="checkHP" minWidth="150.0" mnemonicParsing="false" text="HP" />
+            <CheckBox fx:id="checkCrit" mnemonicParsing="false" text="Crit Rate" />
+            <CheckBox fx:id="checkSpeed" mnemonicParsing="false" text="Velocità" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </VBox>
+   </left>
+   <bottom>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Risultato">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="txtResult" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+      </VBox>
+   </bottom>
+</BorderPane>
