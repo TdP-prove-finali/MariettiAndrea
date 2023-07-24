@@ -23,7 +23,7 @@ public class EntryPoint extends Application {
         FXMLController controller = loader.getController();
         controller.setModel(model);
         
-        stage.setTitle("Lab10");
+        stage.setTitle("Emblems Loadout Builder");
         stage.setScene(scene);
         stage.show();
     }
