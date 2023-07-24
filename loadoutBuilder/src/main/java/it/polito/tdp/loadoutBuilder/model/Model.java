@@ -2,7 +2,8 @@
 	
 	import java.util.ArrayList;
 	import java.util.HashMap;
-	import java.util.List;
+import java.util.HashSet;
+import java.util.List;
 	import java.util.Map;
 	import java.util.Set;
 	
@@ -37,18 +38,19 @@
 			this.bestPrimo = 0.0;
 			
 			List<Emblem> parziale = new ArrayList<>(scelti);
+			Set<Emblem> usati = new HashSet<>();
 			
 			if (parziale.size() == 10) {
 				this.buildFinale = new ArrayList<>(parziale);
 			}else {
 				
 				List<Emblem> emblemi = new ArrayList<>(this.listaEmblemi);
-				if(parziale.size()>0) {
-					emblemi.removeAll(parziale);
-				}
+//				if(parziale.size()>0) {
+//					emblemi.removeAll(parziale);
+//				}
 				
 				long tic = System.nanoTime();
-				this.cerca(paramPrincipale, arrChecked,parziale,emblemi);
+				this.cerca(paramPrincipale, arrChecked,parziale,emblemi,usati,0);
 				long tac = System.nanoTime();
 				System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
 			}
@@ -58,19 +60,23 @@
 	
 	
 	
-		private void cerca(String paramPrincipale, Boolean[] arrChecked, List<Emblem> parziale, List<Emblem> emblemi) {
+		private void cerca(String paramPrincipale, Boolean[] arrChecked, List<Emblem> parziale, List<Emblem> emblemi, Set<Emblem> usati, int index) {
 	
 	
 			// condizione di terminazione
 			if(parziale.size()==10) {
 				// calcola il valore del parametro nel parziale attuale
 				double valoreAttuale = this.calcolaAttuale(parziale);
+				if(valoreAttuale<=0) {
+					return;
+				}
 				if(this.bestPrimo==0) {
 					this.bestPrimo = valoreAttuale;
 				}
 				if(this.bestPrimo>=valoreAttuale) {
 					return;
 				}else {
+					System.out.println("Valore attuale: "+valoreAttuale+"  "+"Valore migliore: "+this.bestPrimo);
 					boolean isValido = this.isBuildValid(parziale,arrChecked);
 					if(isValido) {
 						this.bestPrimo = valoreAttuale;
@@ -80,13 +86,22 @@
 				}
 			}
 			
-			for(Emblem e : emblemi) {
-				if(!parziale.contains(e)) {
+			for(int i=index;i<emblemi.size();i++) {
+				Emblem e = emblemi.get(i);
+				if(!parziale.contains(e) && !usati.contains(e)) {
 					parziale.add(e);
-					this.cerca(paramPrincipale,arrChecked, parziale, emblemi);
+					usati.add(e);
+					this.cerca(paramPrincipale,arrChecked, parziale, emblemi, usati, i+1);
 					parziale.remove(parziale.size()-1);
 				}
 			}
+//			for(Emblem e : emblemi) {
+//				if(!parziale.contains(e)) {
+//					parziale.add(e);
+//					this.cerca(paramPrincipale,arrChecked, parziale, emblemi);
+//					parziale.remove(parziale.size()-1);
+//				}
+//			}
 			
 		}
 	

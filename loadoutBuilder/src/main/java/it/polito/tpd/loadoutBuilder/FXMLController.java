@@ -1,6 +1,7 @@
 package it.polito.tpd.loadoutBuilder;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -19,7 +20,7 @@ import javafx.scene.control.TextArea;
 public class FXMLController {
 
 	private Model model;
-	String[] arrParam = {"Attack", "Sp.Atk", "Defense", "Sp.Def","HP","Crit.Rate","Mov.Speed"};
+	private String[] arrParam = {"Attack", "Sp.Atk", "Defense", "Sp.Def","HP","Crit.Rate","Mov.Speed"};
 	
     @FXML
     private ResourceBundle resources;
@@ -63,6 +64,10 @@ public class FXMLController {
 
     @FXML
     void doCreaBuild(ActionEvent event) {
+    	
+    	this.txtResult.clear();
+    	
+    	
     	//TODO mancano i controlli e tutto
     	
     	String paramPrincipale = this.cmbP1.getValue();
@@ -82,10 +87,20 @@ public class FXMLController {
     	
     	this.model.creaBuild(paramPrincipale,arrChecked, scelti);
     	
-    	List<Emblem> result = this.model.getBuildFinale();
+    	paramPrincipale = null;
+    	List<Emblem> result = new ArrayList<>(this.model.getBuildFinale());
+    	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
     	for(Emblem e : result) {
     		this.txtResult.appendText(e.toString()+"\n");
+    		valori[e.getIdUp()] += e.getVal_up();
+    		valori[e.getIdDown()] += e.getVal_down();
     	}
+    	
+    	this.txtResult.appendText("\nParametri finali:\n");
+    	for(int c=0;c<7;c++) {
+    		this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
+    	}
+    	
     }
 
     @FXML

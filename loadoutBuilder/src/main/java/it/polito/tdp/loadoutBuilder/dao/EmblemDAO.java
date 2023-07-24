@@ -24,7 +24,7 @@ public class EmblemDAO {
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
-				System.out.println(rs.getString("Name"));
+				//System.out.println(rs.getString("Name"));
 				String[] arr = rs.getString("Gold").split(" ");
 				int idUp = reverseIdMap.get(arr[0]);
 				int idDown = reverseIdMap.get(arr[2]);
