@@ -13,7 +13,7 @@ import it.polito.tdp.loadoutBuilder.model.Emblem;
 
 public class EmblemDAO {
 
-	public List<Emblem> getAllEmblems(Map<String, Integer> reverseIdMap){
+	public List<Emblem> getEmblemi(Map<String, Integer> reverseIdMap){
 		String sql = "SELECT * "
 				+ "FROM emblems";
 		List<Emblem> result = new ArrayList<>();

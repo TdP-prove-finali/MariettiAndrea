@@ -20,7 +20,7 @@ public class Emblem {
 	private String param_down;
 	private double val_down;
 	
-	
+	private int usi;
 
 
 
@@ -34,6 +34,7 @@ public class Emblem {
 		this.idDown = idDown;
 		this.param_down = param_down;
 		this.val_down = val_down;
+		this.usi = 2;
 	}
 
 
@@ -75,6 +76,18 @@ public class Emblem {
 
 	public int getIdDown() {
 		return idDown;
+	}
+
+	
+	
+
+	public int getUsi() {
+		return usi;
+	}
+
+
+	public void setUsi(int usi) {
+		this.usi = usi;
 	}
 
 

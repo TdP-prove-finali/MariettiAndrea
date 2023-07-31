@@ -2,26 +2,22 @@ package it.polito.tpd.loadoutBuilder;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import it.polito.tdp.loadoutBuilder.model.Emblem;
 import it.polito.tdp.loadoutBuilder.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
 public class FXMLController {
-
+	
 	private Model model;
 	private String[] arrParam = {"Attack", "Sp.Atk", "Defense", "Sp.Def","HP","Crit.Rate","Mov.Speed"};
-	
+
     @FXML
     private ResourceBundle resources;
 
@@ -29,35 +25,43 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private CheckBox CheckDefSp;
-
-    @FXML
     private Button btnCrea;
 
     @FXML
-    private CheckBox checkAtt;
+    private ComboBox<Emblem> cmb1;
 
     @FXML
-    private CheckBox checkAttSp;
+    private ComboBox<Emblem> cmb2;
 
     @FXML
-    private CheckBox checkCrit;
+    private ComboBox<Emblem> cmb3;
 
     @FXML
-    private CheckBox checkDef;
+    private ComboBox<Emblem> cmb4;
 
     @FXML
-    private CheckBox checkHP;
+    private ComboBox<Emblem> cmb5;
 
     @FXML
-    private CheckBox checkSpeed;
+    private ComboBox<Emblem> cmb6;
+
+    @FXML
+    private ComboBox<Emblem> cmb7;
+
+    @FXML
+    private ComboBox<Emblem> cmb8;
+
+    @FXML
+    private ComboBox<Emblem> cmb9;
+    
+    @FXML
+    private ComboBox<Emblem> cmb10;
+
+    @FXML
+    private ComboBox<String> cmbP0;
 
     @FXML
     private ComboBox<String> cmbP1;
-
-
-    @FXML
-    private ListView<Emblem> listPicker;
 
     @FXML
     private TextArea txtResult;
@@ -66,68 +70,121 @@ public class FXMLController {
     void doCreaBuild(ActionEvent event) {
     	
     	this.txtResult.clear();
+    	String parametroSecondario = this.cmbP0.getValue();
+    	String parametroPrinciapale = this.cmbP1.getValue();
+    	List<Emblem> scelti = new ArrayList<>();
     	
-    	
-    	//TODO mancano i controlli e tutto
-    	
-    	String paramPrincipale = this.cmbP1.getValue();
-    	// ad ogni posizione dell'array corrisponde un valore booleano che indica se il parametro può essere diminuto o meno
-    	// le posizioni sono corrispondenti all'array arrParam
-    	Boolean[] arrChecked = new Boolean[this.arrParam.length];
-    	arrChecked[0] = this.checkAtt.isSelected();
-    	arrChecked[1] = this.checkAttSp.isSelected();
-    	arrChecked[2] = this.checkDef.isSelected();
-    	arrChecked[3] = this.CheckDefSp.isSelected();
-    	arrChecked[4] = this.checkHP.isSelected();
-    	arrChecked[5] = this.checkCrit.isSelected();
-    	arrChecked[6] = this.checkSpeed.isSelected();
-    	
-    	//lista placeholder nel caso l'utente avesse scelto alcuni valori manualmente. saranno quelli di partenza per il parziale
-    	Set<Emblem> scelti = new HashSet<>();
-    	
-    	this.model.creaBuild(paramPrincipale,arrChecked, scelti);
-    	
-    	paramPrincipale = null;
-    	List<Emblem> result = new ArrayList<>(this.model.getBuildFinale());
-    	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-    	for(Emblem e : result) {
-    		this.txtResult.appendText(e.toString()+"\n");
-    		valori[e.getIdUp()] += e.getVal_up();
-    		valori[e.getIdDown()] += e.getVal_down();
+    	if(parametroPrinciapale != null) {
+    		List<Emblem> temp = new ArrayList<>();
+    		
+    		temp.add(this.cmb1.getValue());
+    		temp.add(this.cmb2.getValue());
+    		temp.add(this.cmb3.getValue());
+    		temp.add(this.cmb4.getValue());
+    		temp.add(this.cmb5.getValue());
+    		temp.add(this.cmb6.getValue());
+    		temp.add(this.cmb7.getValue());
+    		temp.add(this.cmb8.getValue());
+    		temp.add(this.cmb9.getValue());
+    		temp.add(this.cmb10.getValue());
+    		
+    		
+    		for(Emblem e : temp) {
+    			if(e!=null) 
+    				scelti.add(e);
+    		}
+    		
+    		this.model.creaBuild(parametroPrinciapale, parametroSecondario, scelti);
+    		
+    		List<Emblem> result = new ArrayList<>();
+    		result = this.model.getBuildFinale();
+        	
+        	if(result == null || result.size()==0) {
+        		this.txtResult.setText("Non è stata trovata alcuna combinazione");
+        		return;
+        	}
+        	
+        	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        	for(Emblem e : result) {
+        		this.txtResult.appendText(e.toString()+"\n");
+        		valori[e.getIdUp()] += e.getVal_up();
+        		valori[e.getIdDown()] += e.getVal_down();
+        	}
+        	
+        	this.txtResult.appendText("\nParametri finali:\n");
+        	for(int c=0;c<7;c++) {
+        		if(c==5) {
+        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"%\n");
+        		}else {
+        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
+        		}
+        		
+        	}
+        	
+        	this.reset();
+    		
+    	}else {
+    		this.txtResult.setText("Scegliere un valore da massimizzare");
     	}
-    	
-    	this.txtResult.appendText("\nParametri finali:\n");
-    	for(int c=0;c<7;c++) {
-    		this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
-    	}
-    	
     }
 
-    @FXML
+    
+	@FXML
     void initialize() {
-        assert CheckDefSp != null : "fx:id=\"CheckDefSp\" was not injected: check your FXML file 'Scene.fxml'.";
         assert btnCrea != null : "fx:id=\"btnCrea\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert checkAtt != null : "fx:id=\"checkAtt\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert checkAttSp != null : "fx:id=\"checkAttSp\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert checkCrit != null : "fx:id=\"checkCrit\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert checkDef != null : "fx:id=\"checkDef\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert checkHP != null : "fx:id=\"checkHP\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert checkSpeed != null : "fx:id=\"checkSpeed\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb1 != null : "fx:id=\"cmb1\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb10 != null : "fx:id=\"cmb10\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb2 != null : "fx:id=\"cmb2\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb3 != null : "fx:id=\"cmb3\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb4 != null : "fx:id=\"cmb4\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb5 != null : "fx:id=\"cmb5\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb6 != null : "fx:id=\"cmb6\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb7 != null : "fx:id=\"cmb7\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb8 != null : "fx:id=\"cmb8\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmb9 != null : "fx:id=\"cmb9\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert cmbP0 != null : "fx:id=\"cmbP0\" was not injected: check your FXML file 'Scene.fxml'.";
         assert cmbP1 != null : "fx:id=\"cmbP1\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert listPicker != null : "fx:id=\"listPicker\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Scene.fxml'.";
 
     }
-
-	public void setModel(Model model) {
+    
+    public void setModel(Model model) {
 		this.model = new Model();
-		this.listPicker.getItems().addAll(this.model.getAllEmblems());
 		int i=0;
 		while(i <this.arrParam.length) {
-			this.cmbP1.getItems().add(this.arrParam[i]);
+			this.cmbP0.getItems().add(arrParam[i]);
+			this.cmbP1.getItems().add(arrParam[i]);
 			i++;
 		}
 		
+		List<Emblem> emblemi = new ArrayList<>(this.model.getEmblemi());
+		this.cmb1.getItems().addAll(emblemi);
+		this.cmb2.getItems().addAll(emblemi);
+		this.cmb3.getItems().addAll(emblemi);
+		this.cmb4.getItems().addAll(emblemi);
+		this.cmb5.getItems().addAll(emblemi);
+		this.cmb6.getItems().addAll(emblemi);
+		this.cmb7.getItems().addAll(emblemi);
+		this.cmb8.getItems().addAll(emblemi);
+		this.cmb9.getItems().addAll(emblemi);
+		this.cmb10.getItems().addAll(emblemi);		
+		
 	}
+    
+    private void reset() {
+    	this.cmbP0.setValue(null);
+    	this.cmbP1.setValue(null);
+    	this.cmb1.setValue(null);
+    	this.cmb2.setValue(null);
+    	this.cmb3.setValue(null);
+    	this.cmb4.setValue(null);
+    	this.cmb5.setValue(null);
+    	this.cmb6.setValue(null);
+    	this.cmb7.setValue(null);
+    	this.cmb8.setValue(null);
+    	this.cmb9.setValue(null);
+    	this.cmb10.setValue(null);
+	}
+
 
 }

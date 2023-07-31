@@ -17,103 +17,180 @@ import java.util.List;
 		
 		private Map<Integer, String> idMap;
 		private Map<String, Integer> reverseIdMap;
+		private Map<String, Integer> mappaSoglie;
 		
 		private List<Emblem> buildFinale;
+		private double bestScore;
+		private int idParam;
 		
-		private double bestPrimo;
-		private int idPrimo;
+		private int idSecondario;
 		
 		public Model() {
 			this.dao = new EmblemDAO();
 			this.idMap = new HashMap<>();
 			this.reverseIdMap = new HashMap<>();
+			this.mappaSoglie = new HashMap<>();
 			this.creaMappe(this.idMap, this.reverseIdMap);
+			this.aggiungiSoglie(this.mappaSoglie);
 		}
 		
 		
 	
-		public void creaBuild(String paramPrincipale, Boolean[] arrChecked, Set<Emblem> scelti) {
+		
+
+
+
+		public void creaBuild(String paramPrincipale, String parametroSecondario, List<Emblem> scelti) {
 			
-			this.idPrimo = this.reverseIdMap.get(paramPrincipale);
-			this.bestPrimo = 0.0;
+			this.idParam = this.reverseIdMap.get(paramPrincipale);
+			this.bestScore = 0.0;
+			
 			
 			List<Emblem> parziale = new ArrayList<>(scelti);
-			Set<Emblem> usati = new HashSet<>();
 			
 			if (parziale.size() == 10) {
 				this.buildFinale = new ArrayList<>(parziale);
+				return;
 			}else {
 				
 				List<Emblem> emblemi = new ArrayList<>(this.listaEmblemi);
-//				if(parziale.size()>0) {
-//					emblemi.removeAll(parziale);
-//				}
 				
-				long tic = System.nanoTime();
-				this.cerca(paramPrincipale, arrChecked,parziale,emblemi,usati,0);
-				long tac = System.nanoTime();
-				System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
+				if(parametroSecondario == null) {
+					long tic = System.nanoTime();
+					this.cerca(paramPrincipale, parziale,emblemi);
+					long tac = System.nanoTime();
+					System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
+				}else {
+					
+					this.idSecondario = this.reverseIdMap.get(parametroSecondario);
+					
+					long tic = System.nanoTime();
+					this.cerca(paramPrincipale, parametroSecondario,parziale,emblemi);
+					long tac = System.nanoTime();
+					System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
+				}
+				
+				
+				
 			}
 			
 			
 		}
 	
 	
-	
-		private void cerca(String paramPrincipale, Boolean[] arrChecked, List<Emblem> parziale, List<Emblem> emblemi, Set<Emblem> usati, int index) {
+		// funzione 1
+		private void cerca(String paramPrincipale, String parametroSecondario, List<Emblem> parziale, List<Emblem> emblemi) {
 	
 	
 			// condizione di terminazione
 			if(parziale.size()==10) {
 				// calcola il valore del parametro nel parziale attuale
-				double valoreAttuale = this.calcolaAttuale(parziale);
-				if(valoreAttuale<=0) {
+				double valoreAttualePrinc = this.calcolaAttuale(parziale,this.idParam);
+				double valoreAttualeSecond = this.calcolaAttuale(parziale,this.idSecondario);
+				if(valoreAttualePrinc<=0 || valoreAttualeSecond<=0) {
 					return;
 				}
-				if(this.bestPrimo==0) {
-					this.bestPrimo = valoreAttuale;
+				if(this.bestScore==0 && valoreAttualeSecond>=0) {
+					this.bestScore = valoreAttualePrinc;
+					this.buildFinale = new ArrayList<>(parziale);
 				}
-				if(this.bestPrimo>=valoreAttuale) {
+				if(this.bestScore>=valoreAttualePrinc) {
 					return;
 				}else {
-					System.out.println("Valore attuale: "+valoreAttuale+"  "+"Valore migliore: "+this.bestPrimo);
-					boolean isValido = this.isBuildValid(parziale,arrChecked);
+					System.out.println("Valore attuale: "+valoreAttualePrinc+"  "+"Valore migliore: "+this.bestScore);
+					boolean isValido = this.isBuildValid(parziale,this.idSecondario);
 					if(isValido) {
-						this.bestPrimo = valoreAttuale;
+						this.bestScore = valoreAttualePrinc;
+						
 						this.buildFinale = new ArrayList<>(parziale);
 						return;
 					}
 				}
 			}
 			
-			for(int i=index;i<emblemi.size();i++) {
+			for(int i=0;i<emblemi.size();i++) {
 				Emblem e = emblemi.get(i);
-				if(!parziale.contains(e) && !usati.contains(e)) {
+				if(!parziale.contains(e) ) {
 					parziale.add(e);
-					usati.add(e);
-					this.cerca(paramPrincipale,arrChecked, parziale, emblemi, usati, i+1);
-					parziale.remove(parziale.size()-1);
+					e.setUsi(e.getUsi()-1);
+					
+					if(parziale.size()==8) {
+						if(this.calcolaAttuale(parziale, this.idParam)<this.mappaSoglie.get(paramPrincipale)) {
+							parziale.remove(parziale.size()-1);
+							e.setUsi(e.getUsi()+1);
+							return;
+						}
+					}else {
+						this.cerca(paramPrincipale,parametroSecondario, parziale, emblemi);
+						parziale.remove(parziale.size()-1);
+						e.setUsi(e.getUsi()-1);
+				}
+					
+
 				}
 			}
-//			for(Emblem e : emblemi) {
-//				if(!parziale.contains(e)) {
-//					parziale.add(e);
-//					this.cerca(paramPrincipale,arrChecked, parziale, emblemi);
-//					parziale.remove(parziale.size()-1);
-//				}
-//			}
+			
+		}
+		
+		
+		// funzione 2
+		private void cerca(String paramPrincipale, List<Emblem> parziale, List<Emblem> emblemi) {
+			
+			
+			// condizione di terminazione
+			if(parziale.size()==10) {
+				// calcola il valore del parametro nel parziale attuale
+				double valoreAttualePrinc = this.calcolaAttuale(parziale,this.idParam);
+				if(valoreAttualePrinc<=0) {
+					return;
+				}
+				if(this.bestScore==0) {
+					this.bestScore = valoreAttualePrinc;
+					this.buildFinale = new ArrayList<>(parziale);
+				}
+				if(this.bestScore>=valoreAttualePrinc) {
+					return;
+				}else {
+					System.out.println("Valore attuale: "+valoreAttualePrinc+"  "+"Valore migliore: "+this.bestScore);
+					this.bestScore = valoreAttualePrinc;
+					this.buildFinale = new ArrayList<>(parziale);
+					return;
+				}
+			}
+			
+			for(int i=0;i<emblemi.size();i++) {
+				Emblem e = emblemi.get(i);
+				if(!parziale.contains(e) ) {
+					parziale.add(e);
+					e.setUsi(e.getUsi()-1);
+					
+					if(parziale.size()==8) {
+						if(this.calcolaAttuale(parziale, this.idParam)<this.mappaSoglie.get(paramPrincipale)) {
+							parziale.remove(parziale.size()-1);
+							e.setUsi(e.getUsi()+1);
+							return;
+						}
+					}else {
+						this.cerca(paramPrincipale,parziale, emblemi);
+						parziale.remove(parziale.size()-1);
+						e.setUsi(e.getUsi()-1);
+				}
+					
+
+				}
+			}
 			
 		}
 	
 	
 	
-		private double calcolaAttuale(List<Emblem> parziale) {
+		private double calcolaAttuale(List<Emblem> parziale, int id) {
 	
 			double value=0.0;
 			for(Emblem e : parziale) {
-				if(e.getIdUp()==this.idPrimo) {
+				if(e.getIdUp()==id) {
 					value += e.getVal_up();
-				}else if(e.getIdDown()==this.idPrimo) {
+				}else if(e.getIdDown()==id) {
 					value +=e.getVal_down();
 				}
 			}
@@ -122,32 +199,28 @@ import java.util.List;
 	
 	
 	
-		private boolean isBuildValid(List<Emblem> list, Boolean[] arrChecked) {
+		private boolean isBuildValid(List<Emblem> list, int idSecondario) {
 	
-			Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+			double value = 0.0;
 			
-			for(int i=0;i<7;i++) {
-				for(Emblem e : list) {
-					if(e.getIdUp()==i) {
-						valori[i] += e.getVal_up();
-					} else if(e.getIdDown()==i) {
-						valori[i] += e.getVal_down();
-					}
+			for(Emblem e : list) {
+				if(e.getIdUp()==idSecondario) {
+					value += e.getVal_up();
+				}else if (e.getIdDown()==idSecondario) {
+					value += e.getVal_down();
 				}
 			}
-			// se il valore è true vuol dire che il parametro è richiesto >=0
-			for(int k=0;k<arrChecked.length;k++) {
-				if(arrChecked[k]==true && valori[k]<0) {
-					return false;
-				}
+			if(value>=0.0) {
+				return true;
+			}else {
+				return false;
 			}
-			return true;
 		}
 	
 		
-		public List<Emblem> getAllEmblems() {
+		public List<Emblem> getEmblemi() {
 			
-			this.listaEmblemi = this.dao.getAllEmblems(this.reverseIdMap);
+			this.listaEmblemi = this.dao.getEmblemi(this.reverseIdMap);
 			
 			return listaEmblemi;
 		}
@@ -174,7 +247,16 @@ import java.util.List;
 		}
 		
 		
-		
+		private void aggiungiSoglie(Map<String, Integer> mappa) {
+			mappa.put("Attack", 3);
+			mappa.put("Sp.Atk", 3);
+			mappa.put("Defense", 3);
+			mappa.put("Sp.Def", 3);
+			mappa.put("HP", 100);
+			mappa.put("Crit.Rate", 1);
+			mappa.put("Mov.Speed", 100);
+			
+		}
 		
 		
 		
