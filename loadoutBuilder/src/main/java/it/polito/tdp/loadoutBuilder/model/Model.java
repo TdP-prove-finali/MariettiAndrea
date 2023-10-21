@@ -83,7 +83,7 @@ import java.util.List;
 	
 	
 			// condizione di terminazione
-			if(parziale.size()==10) {
+			if(parziale.size()==5) {
 				// calcola il valore del parametro nel parziale attuale
 				double valoreAttualePrinc = this.calcolaAttuale(parziale,this.idParam);
 				double valoreAttualeSecond = this.calcolaAttuale(parziale,this.idSecondario);
@@ -113,24 +113,14 @@ import java.util.List;
 				if(!parziale.contains(e) ) {
 					parziale.add(e);
 					e.setUsi(e.getUsi()-1);
-					
-					if(parziale.size()==8) {
-						if(this.calcolaAttuale(parziale, this.idParam)<this.mappaSoglie.get(paramPrincipale)) {
-							parziale.remove(parziale.size()-1);
-							e.setUsi(e.getUsi()+1);
-							return;
-						}
-					}else {
-						this.cerca(paramPrincipale,parametroSecondario, parziale, emblemi);
-						parziale.remove(parziale.size()-1);
-						e.setUsi(e.getUsi()-1);
+					this.cerca(paramPrincipale,parametroSecondario, parziale, emblemi);
+					parziale.remove(parziale.size()-1);
+					e.setUsi(e.getUsi()-1);
 				}
 					
 
 				}
 			}
-			
-		}
 		
 		
 		// funzione 2
