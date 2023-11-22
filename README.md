@@ -1,3 +1,3 @@
-###TODO\n
--Aspettare risposta prof
--Effettuare modifiche proposte
+### TODO
+- [ ] Aspettare risposta prof
+- [ ] Effettuare modifiche proposte
