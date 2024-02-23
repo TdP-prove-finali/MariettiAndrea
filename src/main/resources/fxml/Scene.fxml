@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.loadoutBuilder.FXMLController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.loadoutBuilder.FXMLController">
    <top>
       <Label alignment="CENTER" contentDisplay="CENTER" text="Generatore Build" textFill="#ff0808" BorderPane.alignment="CENTER">
          <font>
@@ -36,7 +36,7 @@
                                           <Font name="System Bold" size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="cmbP1" prefHeight="26.0" prefWidth="104.0" />
+                                    <ComboBox fx:id="cmbP2" prefHeight="26.0" prefWidth="104.0" />
                                     <Button fx:id="btnCreaManual" mnemonicParsing="false" onAction="#doCreaBuildManual" text="CREA">
                                        <VBox.margin>
                                           <Insets top="50.0" />

@@ -32,8 +32,6 @@ public class Model {
 		this.aggiungiSoglie(this.mappaSoglie);
 	}
 	
-	//prova	
-	
 
 
 
@@ -81,6 +79,39 @@ public class Model {
 	}
 
 
+	public void creaBuild(String paramPrincipale, String parametroSecondario) {
+		
+		this.idParam = this.reverseIdMap.get(paramPrincipale);
+		this.bestScore = 0.0;
+		
+		
+		List<Emblem> parziale = new ArrayList<>();
+		
+			/**
+			 * estraggo casualmente 30 emblemi e da li parto
+			 * riduce i tempi
+			 * **/
+			
+			List<Emblem> emblemi = new ArrayList<Emblem>();
+			emblemi.addAll(this.randomPull(this.listaEmblemi));
+			
+			if(parametroSecondario == null) {
+				long tic = System.nanoTime();
+				this.cerca(paramPrincipale, parziale,emblemi);
+				long tac = System.nanoTime();
+				System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
+			}else {
+				
+				this.idSecondario = this.reverseIdMap.get(parametroSecondario);
+				
+				long tic = System.nanoTime();
+				this.cerca(paramPrincipale, parametroSecondario,parziale,emblemi);
+				long tac = System.nanoTime();
+				System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
+			}
+		
+	}
+	
 	private ArrayList<Emblem> randomPull(List<Emblem> pool) {
 		
 		ArrayList<Emblem> temp = new ArrayList<Emblem>();

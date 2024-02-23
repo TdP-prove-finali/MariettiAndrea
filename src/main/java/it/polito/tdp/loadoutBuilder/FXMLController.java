@@ -16,7 +16,7 @@ import javafx.scene.control.TextArea;
 public class FXMLController {
     
 	private Model model;
-	private String[] arrParam = {"Attack", "Sp.Atk", "Defense", "Sp.Def","HP","Crit.Rate","Mov.Speed"};
+	private String[] arrParam = {null,"Attack", "Sp.Atk", "Defense", "Sp.Def","HP","Crit.Rate","Mov.Speed"};
 
     @FXML
     private ResourceBundle resources;
@@ -67,37 +67,112 @@ public class FXMLController {
     private ComboBox<String> cmbP1;
 
     @FXML
+    private ComboBox<String> cmbP2;
+    
+    @FXML
     private TextArea txtResult;
 
     @FXML
     void doCreaBuildAuto(ActionEvent event) {
+    	
+    	this.txtResult.clear();
+    	String parametroPrinciapale = this.cmbP1.getValue();
+    	String parametroSecondario = this.cmbP0.getValue();
 
+    	if(parametroPrinciapale != null) {
+    		
+    		this.model.creaBuild(parametroPrinciapale, parametroSecondario);
+    		
+    		List<Emblem> result = new ArrayList<>();
+    		result = this.model.getBuildFinale();
+        	
+        	if(result == null || result.size()==0) {
+        		this.txtResult.setText("Non è stata trovata alcuna combinazione valida, riprovare");
+        		return;
+        	}
+        	
+        	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        	for(Emblem e : result) {
+        		this.txtResult.appendText(e.toString()+"\n");
+        		valori[e.getIdUp()] += e.getVal_up();
+        		valori[e.getIdDown()] += e.getVal_down();
+        	}
+        	
+        	this.txtResult.appendText("\nParametri finali:\n");
+        	for(int c=1;c<8;c++) {
+        		if(c==5) {
+        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"%\n");
+        		}else {
+        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
+        		}
+        		
+        	}
+        	this.reset();
+    		
+    	}else {
+    		this.txtResult.setText("Scegliere un valore da massimizzare");
+    	}
     }
 
     @FXML
     void doCreaBuildManual(ActionEvent event) {
+    	this.txtResult.clear();
+    	String parametroPrinciapale = this.cmbP1.getValue();
+    	String parametroSecondario = this.cmbP0.getValue();
+    	List<Emblem> scelti = new ArrayList<>();
 
-    }
-
-
-
-    @FXML
-    void initialize() {
-        //assert btnCrea != null : "fx:id=\"btnCrea\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb1 != null : "fx:id=\"cmb1\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb10 != null : "fx:id=\"cmb10\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb2 != null : "fx:id=\"cmb2\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb3 != null : "fx:id=\"cmb3\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb4 != null : "fx:id=\"cmb4\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb5 != null : "fx:id=\"cmb5\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb6 != null : "fx:id=\"cmb6\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb7 != null : "fx:id=\"cmb7\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb8 != null : "fx:id=\"cmb8\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmb9 != null : "fx:id=\"cmb9\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmbP0 != null : "fx:id=\"cmbP0\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert cmbP1 != null : "fx:id=\"cmbP1\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Scene.fxml'.";
-
+    	if(parametroPrinciapale != null) {
+    		List<Emblem> temp = new ArrayList<>();
+    		
+    		temp.add(this.cmb1.getValue());
+    		temp.add(this.cmb2.getValue());
+    		temp.add(this.cmb3.getValue());
+    		temp.add(this.cmb4.getValue());
+    		temp.add(this.cmb5.getValue());
+    		temp.add(this.cmb6.getValue());
+    		temp.add(this.cmb7.getValue());
+    		temp.add(this.cmb8.getValue());
+    		temp.add(this.cmb9.getValue());
+    		temp.add(this.cmb10.getValue());
+    		
+    		
+    		for(Emblem e : temp) {
+    			if(e!=null) 
+    				scelti.add(e);
+    		}
+    		
+    		this.model.creaBuild(parametroPrinciapale, parametroSecondario, scelti);
+    		
+    		List<Emblem> result = new ArrayList<>();
+    		result = this.model.getBuildFinale();
+        	
+        	if(result == null || result.size()==0) {
+        		this.txtResult.setText("Non è stata trovata alcuna combinazione");
+        		return;
+        	}
+        	
+        	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        	for(Emblem e : result) {
+        		this.txtResult.appendText(e.toString()+"\n");
+        		valori[e.getIdUp()] += e.getVal_up();
+        		valori[e.getIdDown()] += e.getVal_down();
+        	}
+        	
+        	this.txtResult.appendText("\nParametri finali:\n");
+        	for(int c=1;c<8;c++) {
+        		if(c==5) {
+        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"%\n");
+        		}else {
+        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
+        		}
+        		
+        	}
+        	
+        	this.reset();
+    		
+    	}else {
+    		this.txtResult.setText("Scegliere un valore da massimizzare");
+    	}
     }
 
     public void setModel(Model model) {
@@ -106,6 +181,7 @@ public class FXMLController {
 		while(i <this.arrParam.length) {
 			this.cmbP0.getItems().add(arrParam[i]);
 			this.cmbP1.getItems().add(arrParam[i]);
+			this.cmbP2.getItems().add(arrParam[i]);
 			i++;
 		}
 		
