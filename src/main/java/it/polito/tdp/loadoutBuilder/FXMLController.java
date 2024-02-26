@@ -86,27 +86,14 @@ public class FXMLController {
     		List<Emblem> result = new ArrayList<>();
     		result = this.model.getBuildFinale();
         	
-        	if(result == null || result.size()==0) {
+        	if(result == null || result.size()<=0) {
+        		this.reset();
         		this.txtResult.setText("Non è stata trovata alcuna combinazione valida, riprovare");
         		return;
         	}
         	
-        	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-        	for(Emblem e : result) {
-        		this.txtResult.appendText(e.toString()+"\n");
-        		valori[e.getIdUp()] += e.getVal_up();
-        		valori[e.getIdDown()] += e.getVal_down();
-        	}
+        	this.stampaRisultato(result);
         	
-        	this.txtResult.appendText("\nParametri finali:\n");
-        	for(int c=1;c<8;c++) {
-        		if(c==5) {
-        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"%\n");
-        		}else {
-        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
-        		}
-        		
-        	}
         	this.reset();
     		
     	}else {
@@ -117,8 +104,7 @@ public class FXMLController {
     @FXML
     void doCreaBuildManual(ActionEvent event) {
     	this.txtResult.clear();
-    	String parametroPrinciapale = this.cmbP1.getValue();
-    	String parametroSecondario = this.cmbP0.getValue();
+    	String parametroPrinciapale = this.cmbP2.getValue();
     	List<Emblem> scelti = new ArrayList<>();
 
     	if(parametroPrinciapale != null) {
@@ -141,32 +127,18 @@ public class FXMLController {
     				scelti.add(e);
     		}
     		
-    		this.model.creaBuild(parametroPrinciapale, parametroSecondario, scelti);
+    		this.model.creaBuild(parametroPrinciapale, scelti);
     		
     		List<Emblem> result = new ArrayList<>();
     		result = this.model.getBuildFinale();
         	
         	if(result == null || result.size()==0) {
+        		this.reset();
         		this.txtResult.setText("Non è stata trovata alcuna combinazione");
         		return;
         	}
         	
-        	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-        	for(Emblem e : result) {
-        		this.txtResult.appendText(e.toString()+"\n");
-        		valori[e.getIdUp()] += e.getVal_up();
-        		valori[e.getIdDown()] += e.getVal_down();
-        	}
-        	
-        	this.txtResult.appendText("\nParametri finali:\n");
-        	for(int c=1;c<8;c++) {
-        		if(c==5) {
-        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"%\n");
-        		}else {
-        			this.txtResult.appendText(this.arrParam[c]+": "+valori[c]+"\n");
-        		}
-        		
-        	}
+        	this.stampaRisultato(result);
         	
         	this.reset();
     		
@@ -175,7 +147,27 @@ public class FXMLController {
     	}
     }
 
-    public void setModel(Model model) {
+    private void stampaRisultato(List<Emblem> result) {
+    	Double[] valori = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+    	for(Emblem e : result) {
+    		this.txtResult.appendText(e.toString()+"\n");
+    		valori[e.getIdUp()] += e.getVal_up();
+    		valori[e.getIdDown()] += e.getVal_down();
+    	}
+    	
+    	this.txtResult.appendText("\nParametri finali:\n");
+    	for(int c=1;c<8;c++) {
+    		if(c==6) {
+    			this.txtResult.appendText(this.arrParam[c]+": "+valori[c-1]+"%\n");
+    		}else {
+    			this.txtResult.appendText(this.arrParam[c]+": "+valori[c-1]+"\n");
+    		}
+    		
+    	}
+		
+	}
+
+	public void setModel(Model model) {
 		this.model = new Model();
 		int i=0;
 		while(i <this.arrParam.length) {
