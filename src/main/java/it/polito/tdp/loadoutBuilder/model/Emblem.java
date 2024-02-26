@@ -4,13 +4,6 @@ import java.util.Objects;
 
 public class Emblem {
 	
-	/*
-	 * 
-	 * MAGARI IMPLEMENTA ANCHE I TIPI BRONZE E SILVER ALLA FINE
-	 * AGGIUNGI UN CAMPO PER QUELLA ROBA
-	 * 
-	 * */
-	
 	private String nome;
 	private String colore;
 	private int idUp;
@@ -19,7 +12,6 @@ public class Emblem {
 	private int idDown;
 	private String param_down;
 	private double val_down;
-	
 	private int usi;
 
 
