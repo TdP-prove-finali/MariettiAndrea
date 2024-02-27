@@ -104,6 +104,13 @@ public class Model {
 					this.buildFinale = new ArrayList<Emblem>();
 					this.buildFinale.addAll(this.buildParziale1);
 					this.buildFinale.addAll(this.buildParziale2);
+					
+					double p2 = this.calcolaAttuale(this.buildFinale, this.idSecondario);
+					
+					if(p2<0) {
+						this.buildFinale = new ArrayList<Emblem>();
+						System.out.println("svuotato");
+					}
 				}
 			}
 		
