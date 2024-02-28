@@ -69,7 +69,7 @@ public class Model {
 	 *  Riceve il nome del parametro scelto e quello secondario (null se non scelto)
 	 * 	
 	 * **/
-	public void creaBuild(String paramPrincipale, String parametroSecondario) {
+	public void creaBuild(String paramPrincipale, String paramSecondario) {
 		
 		this.idParam = this.reverseIdMap.get(paramPrincipale);
 		this.bestScore = 0.0;
@@ -79,7 +79,7 @@ public class Model {
 			List<Emblem> emblemi;
 			
 			
-			if(parametroSecondario == null) {
+			if(paramSecondario == null) {
 				emblemi = new ArrayList<Emblem>();
 				emblemi.addAll(this.randomPull(this.listaEmblemi));
 				long tic = System.nanoTime();
@@ -89,15 +89,15 @@ public class Model {
 			}else {
 				emblemi = new ArrayList<Emblem>();
 				emblemi.addAll(this.randomPull(this.listaEmblemi));
-				this.idSecondario = this.reverseIdMap.get(parametroSecondario);
+				this.idSecondario = this.reverseIdMap.get(paramSecondario);
 				
-				this.cerca(paramPrincipale, parametroSecondario,parziale,emblemi);
+				this.cerca(paramPrincipale, paramSecondario,parziale,emblemi);
 				
 				
 				this.var_stop = false;
 				emblemi = new ArrayList<Emblem>();
 				emblemi.addAll(this.randomPull(this.listaEmblemi));
-				this.cerca(paramPrincipale, parametroSecondario,parziale,emblemi);
+				this.cerca(paramPrincipale, paramSecondario,parziale,emblemi);
 
 				
 				if(this.buildParziale1!=null && this.buildParziale2!=null) {
