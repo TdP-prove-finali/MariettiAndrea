@@ -244,16 +244,6 @@ public class Model {
 
 	
 	/**
-	 * Ottiene dal db tutti gli emblemi utilizzabili
-	 * @return lista con tutti gli emblemi
-	 * **/
-	public List<Emblem> getEmblemi() {
-		this.listaEmblemi = this.dao.getEmblemi(this.reverseIdMap);
-		return listaEmblemi;
-	}
-
-	
-	/**
 	 * Riceve come parametro la lista contenente tutti gli emblemi utilizzabili
 	 * @return lista con 30 emblemi estratti casualmente
 	 * **/
@@ -307,6 +297,16 @@ public class Model {
 	 * **/
 	public List<Emblem> getBuildFinale() {
 		return buildFinale;
+	}
+	
+	
+	/**
+	 * Ottiene dal db tutti gli emblemi utilizzabili
+	 * @return lista con tutti gli emblemi
+	 * **/
+	public List<Emblem> getEmblemi() {
+		this.listaEmblemi = this.dao.getEmblemi(this.reverseIdMap);
+		return listaEmblemi;
 	}
 }
 
