@@ -82,10 +82,7 @@ public class Model {
 			if(paramSecondario == null) {
 				emblemi = new ArrayList<Emblem>();
 				emblemi.addAll(this.randomPull(this.listaEmblemi));
-				long tic = System.nanoTime();
 				this.cerca(paramPrincipale, parziale,emblemi);
-				long tac = System.nanoTime();
-				System.out.println("Tempo: "+(tac-tic)/1000000000+" secondi");
 			}else {
 				emblemi = new ArrayList<Emblem>();
 				emblemi.addAll(this.randomPull(this.listaEmblemi));
