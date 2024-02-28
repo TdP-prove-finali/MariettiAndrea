@@ -115,7 +115,7 @@ public class Model {
 	
 	
 	/**
-	 * Modalità Manuale o 1 parametro
+	 * Modalità Automatica
 	 * Cerca la combinazione migliore avendo entrambi i parametri (max e non modificabile)
 	 * il parziale è vuoto e emblemi contiene i 30 emblemi estratti casualmente
 	 * **/
