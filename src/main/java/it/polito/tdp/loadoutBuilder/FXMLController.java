@@ -79,7 +79,7 @@ public class FXMLController {
     	String parametroPrinciapale = this.cmbP1.getValue();
     	String parametroSecondario = this.cmbP0.getValue();
 
-    	if(parametroPrinciapale != null && parametroPrinciapale.compareTo(parametroSecondario)!=0) {
+    	if(parametroPrinciapale != null) {
     		
     		this.model.creaBuild(parametroPrinciapale, parametroSecondario);
     		

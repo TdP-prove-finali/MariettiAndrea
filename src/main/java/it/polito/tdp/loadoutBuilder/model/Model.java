@@ -79,7 +79,7 @@ public class Model {
 			List<Emblem> emblemi;
 			
 			
-			if(paramSecondario == null) {
+			if(paramSecondario == null || paramPrincipale.compareTo(paramSecondario)==0) {
 				emblemi = new ArrayList<Emblem>();
 				emblemi.addAll(this.randomPull(this.listaEmblemi));
 				this.cerca(paramPrincipale, parziale,emblemi);
@@ -195,7 +195,6 @@ public class Model {
 			if(this.bestScore>=valoreAttualePrinc) {
 				return;
 			}else {
-				System.out.println("Valore attuale: "+valoreAttualePrinc+"  "+"Valore migliore: "+this.bestScore);
 				this.bestScore = valoreAttualePrinc;
 				this.buildFinale = new ArrayList<>(parziale);
 				return;
